@@ -227,6 +227,7 @@ cHandle:
 	pushq %rdx
 	pushq %rbp
 	pushq %rsi
+	pushq %r8
 	pushq %r9
 	pushq %r10
 	pushq %r11
@@ -235,6 +236,7 @@ cHandle:
 	pushq %r14
 	pushq %r15
 
+    cld
 	call interruptHandler
 
 	popq %r15
@@ -244,6 +246,7 @@ cHandle:
 	popq %r11
 	popq %r10
 	popq %r9
+	popq %r8
 	popq %rsi
 	popq %rbp
 	popq %rdx

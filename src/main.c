@@ -11,6 +11,7 @@ static void qemu_gdb_hang(void)
 #include "port.h"
 #include "interrupt.h"
 #include "timer.h"
+#include "ints.h"
 
 void main(void)
 {
@@ -25,7 +26,7 @@ void main(void)
 	
 	//timer
     initTimer();
-    __asm__ ("sti");
+    enable_ints();
         
 	while (1);
 }
