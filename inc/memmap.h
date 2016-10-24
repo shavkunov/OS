@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define MEMMAP_MAX_SIZE 100
+#define RESERVED 2
 
 struct memmapEntry {
     uint64_t baseAddr;
@@ -15,7 +16,7 @@ extern uint32_t memmapLength;
 extern struct memmapEntry memmap[];
 
 void addEntry(uint64_t addr, uint64_t len, uint32_t t);
-void read_memmap(void);
-void print_memmap(void);
+void readMemmap(void);
+void printMemmap(void);
 
 #endif

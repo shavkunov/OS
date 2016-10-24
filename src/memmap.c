@@ -7,7 +7,6 @@ struct memmapEntry memmap[MEMMAP_MAX_SIZE];
 extern uint64_t multiboot_info;
 extern char text_phys_begin[];
 extern char bss_phys_end[];
-extern uint32_t multiboot_header[];
 
 void addEntry(uint64_t addr, uint64_t len, uint32_t t) {
     struct memmapEntry* newEntry = memmap + memmapLength;
@@ -18,21 +17,21 @@ void addEntry(uint64_t addr, uint64_t len, uint32_t t) {
     newEntry->type = t;
 }
 
-void read_memmap(void) {
+void readMemmap(void) {
     printf("Reading Memory Map\n");
     
     //init kernel entry
     struct memmapEntry kernelEntry;
     kernelEntry.baseAddr = (uint64_t)text_phys_begin; 
     kernelEntry.length = (uint64_t)bss_phys_end - (uint64_t)text_phys_begin;
-    kernelEntry.type = 0;
+    kernelEntry.type = RESERVED; //reserving kernel
     uint64_t kernelLeft = kernelEntry.baseAddr;
     uint64_t kernelRight = kernelEntry.baseAddr + kernelEntry.length - 1;
     memmap[memmapLength] = kernelEntry;
     memmapLength++;
 
     uint32_t memmapSize = *((uint32_t*) ((char*)multiboot_info + 44));
-    char *memmapAddr = *((char**) ((char*)multiboot_info + 48));
+    char* memmapAddr = *((char**) ((char*)multiboot_info + 48));
     
     while (memmapSize > 0) {
         // current Entry
@@ -67,7 +66,7 @@ void read_memmap(void) {
     printf("End of read memory map\n");
 }
 
-void print_memmap(void) {
+void printMemmap(void) {
     printf("Memory Map\n");
     
     for (uint32_t i = 0; i < memmapLength; i++) {

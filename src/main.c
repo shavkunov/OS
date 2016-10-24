@@ -7,30 +7,39 @@ static void qemu_gdb_hang(void)
 #endif
 }
 
+#include "buddy.h"
 #include "desc.h"
 #include "port.h"
+#include "print.h"
 #include "interrupt.h"
 #include "timer.h"
 #include "ints.h"
-#include <stdint.h>
-#include <memmap.h>
+#include "stdint.h"
+#include "memmap.h"
+
+void init(void) {
+    readMemmap();
+	serial_setup();
+	initInterrupt();
+    initTimer();
+    initBuddy();
+    enable_ints();
+}
 
 void main(void) {
 	qemu_gdb_hang();
-
-    read_memmap();
-
-	//serial test
-	serial_setup();
-	print_memmap();
-	//interrupt test
-	initInterrupt();
-	//__asm__ volatile("int $80");
 	
-	//timer
-    //initTimer();
+	init();
+    printMemmap();
     
-    enable_ints();
-        
-	//while (1);
+    uint32_t** a = (uint32_t**)buddyAlloc(sizeof(uint32_t*) * 100);
+    
+    for (uint32_t i = 0; i < 100; i++) {
+        a[i] = (uint32_t*)buddyAlloc(sizeof(uint32_t) * 100);
+    }
+    
+    buddyFree((void*) a);
+    
+    printf("Test successfull\n");
+	while (1);
 }
