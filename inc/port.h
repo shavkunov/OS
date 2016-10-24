@@ -1,7 +1,12 @@
+#ifndef __PORT_H__
+#define __PORT_H__
+
+#include <stddef.h>
 #include <ioport.h>
 
-void print(const char* s);
+void serial_setup(void);
+void serial_putchar(int c);
+void serial_write(const char *buf, size_t size);
 
-void initSerial();
+#endif /*__PORT_H__*/
 
-int getPort(int number);

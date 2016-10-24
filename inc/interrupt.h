@@ -28,6 +28,5 @@ void setSlaveMask(uint8_t mask);
 void setMasterMask(uint8_t mask);
 void setBitMaster(uint8_t id, uint8_t bit);
 void setBitSlave(uint8_t id, uint8_t bit);
-void print_num(uint8_t num);
 
 #endif

@@ -3,24 +3,12 @@
 #include "desc.h"
 #include "ints.h"
 #include "ioport.h"
-#include "port.h"
+#include "print.h"
 
 static struct idtEntryStruct idt[100];
 extern uint64_t arrayHandlers[];
 uint8_t curMasterMask = 0;
 uint8_t curSlaveMask = 0;
-
-void print_num(uint8_t num) {
-    char mask[9];
-    mask[8] = 0;
-    uint8_t tmp = num;
-    for (int i = 7; i >= 0; i--) {
-        mask[i] = '0' + tmp % 2;
-        tmp /= 2;
-    }
-    print(mask);
-    print("\n");
-}
 
 void setEntryOfIDT(int id, uint64_t e) {
     idt[id].offset0 = e & 0xffff;
@@ -52,15 +40,13 @@ void setSlaveMask(uint8_t mask) {
 }
 
 void setBitMaster(uint8_t id, uint8_t bit) {
-    print_num(curMasterMask);
     if (((curMasterMask >> id) & 1) != bit) {
         if (bit == 0) {
             curMasterMask ^= (1 << id);
         } else {
             curMasterMask |= (1 << id);
         }
-    }
-    print_num(curMasterMask);    
+    }  
     setMasterMask(curMasterMask);
 }
 
@@ -102,21 +88,11 @@ void endOfInterrupt(uint8_t port) {
 }
 
 void interruptHandler(uint64_t interruptIndex) { 
-    if (interruptIndex == 32) {
-	    print("Timer tick. ");
-	}
-	  
-	char num[3];
-	num[2] = '\0';
-	uint8_t tmp = interruptIndex;
-	for (int i = 1; i >= 0; --i) {
-		num[i] = '0' + tmp % 10;
-		tmp /= 10;
+    /*if (interruptIndex == 32) {
+	    printf("Timer tick. ");
 	}
 
-	print("Interrupt is ");
-	print(num);
-	print("\n");
+	printf("Interrupt is %d\n", interruptIndex);*/
 
     // Master End of Interrupt
     if (32 <= interruptIndex && interruptIndex <= 39)

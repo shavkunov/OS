@@ -1,4 +1,4 @@
-static void qemu_gdb_hang(void)
+static void qemu_gdb_hang(void) 
 {
 #ifdef DEBUG
 	static volatile int wait = 1;
@@ -12,21 +12,25 @@ static void qemu_gdb_hang(void)
 #include "interrupt.h"
 #include "timer.h"
 #include "ints.h"
+#include <stdint.h>
+#include <memmap.h>
 
-void main(void)
-{
+void main(void) {
 	qemu_gdb_hang();
 
+    read_memmap();
+
 	//serial test
-	initSerial();
-	print("Hello, world!\n");
+	serial_setup();
+	print_memmap();
 	//interrupt test
 	initInterrupt();
-	__asm__ volatile("int $80");
+	//__asm__ volatile("int $80");
 	
 	//timer
-    initTimer();
+    //initTimer();
+    
     enable_ints();
         
-	while (1);
+	//while (1);
 }
