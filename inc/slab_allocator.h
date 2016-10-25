@@ -16,9 +16,9 @@ struct slabAllocator {
     uint64_t allocatedNodes;
 };
 
-struct slabAllocator* initSlab(uint64_t dataSize, uint64_t amount);
+void slabFree(struct slabAllocator* allocator, void* addr);
 void destroySlab(struct slabAllocator* allocator);
 void* slabAlloc(struct slabAllocator* allocator);
-void slabFree(struct slabAllocator* allocator, void* addr);
+struct slabAllocator* initSlab(uint64_t dataSize, uint64_t amount);
 
 #endif

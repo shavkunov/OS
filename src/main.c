@@ -16,6 +16,7 @@ static void qemu_gdb_hang(void)
 #include "ints.h"
 #include "stdint.h"
 #include "memmap.h"
+#include "slab_allocator.h"
 
 void init(void) {
     readMemmap();
@@ -44,6 +45,19 @@ void main(void) {
     
     buddyFree((void*) a);
     
-    printf("Test successfull\n");
+    printf("Buddy test successfull\n");
+    
+    
+    struct slabAllocator* slab = initSlab(4, 10);
+    uint32_t* b = slabAlloc(slab);
+    
+    for (uint32_t i = 0; i < 10; i++) {
+        b[i] = i + 10;
+    }
+    
+    slabFree(slab, b);
+    destroySlab(slab);
+    
+    printf("Slab test succesfull\n");
 	while (1);
 }
