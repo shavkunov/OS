@@ -38,6 +38,10 @@ void main(void) {
         a[i] = (uint32_t*)buddyAlloc(sizeof(uint32_t) * 100);
     }
     
+    for (uint32_t i = 0; i < 100; i++) {
+        buddyFree(a[i]);
+    }
+    
     buddyFree((void*) a);
     
     printf("Test successfull\n");

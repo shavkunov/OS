@@ -34,11 +34,11 @@ void* getStartAddr(struct descriptor* desc) {
 }
 
 struct descriptor* getDescriptor(void* searchAddr) {
-    uint64_t addr = (uint64_t) searchAddr;
+    uint64_t addr = PHYSICAL_ADDR((uint64_t) searchAddr);
     for (uint64_t i = 0; i < memmapLength; i++) {
         struct memmapEntry* curEntry = memmap + i; 
         if ((curEntry->baseAddr <= addr) && (addr < curEntry->baseAddr + curEntry->length))
-            return metaInfo[i]->descriptors + (addr - metaInfo[i]->startAddr) / PAGE_SIZE;
+            return metaInfo[i]->descriptors + (addr - PHYSICAL_ADDR(metaInfo[i]->startAddr)) / PAGE_SIZE;
     }
     return NULL;
 }
@@ -122,6 +122,7 @@ void buddyFree(void* addr) {
 }
 
 void addSegmentMemory(struct memmapEntry* segment, uint64_t segmentIndex) {
+    
     uint64_t firstAddr = segment->baseAddr;
     if (firstAddr % PAGE_SIZE != 0) {
         firstAddr += PAGE_SIZE - (firstAddr % PAGE_SIZE);
@@ -135,11 +136,14 @@ void addSegmentMemory(struct memmapEntry* segment, uint64_t segmentIndex) {
         return;
     }
   
+    firstAddr = LOGICAL_ADDR(firstAddr);
     struct descriptor* firstDesc = (struct descriptor*)(firstAddr + PAGE_SIZE * pagesAmount);
     struct reservedTreeMetaInfo* info = (struct reservedTreeMetaInfo*)(firstDesc + pagesAmount);
+    
     info->size = pagesAmount;
     info->descriptors = firstDesc;
     info->startAddr = firstAddr;
+    
     for (uint64_t i = 0; i < info->size; i++) {
         info->descriptors[i].allocated = 0;
         info->descriptors[i].level = 0;
@@ -183,6 +187,7 @@ void initBuddy(void) {
         addSegmentMemory(block, i);
     }
   
+    printf("added all memory segments\n");
     initHeads();
   
     printf("End of Buddy Allocator Initialization\n");

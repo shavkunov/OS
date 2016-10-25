@@ -7,6 +7,10 @@
 #include <memmap.h>
 
 #define MAX_LEVEL 32
+#define MEM_SHIFT 0xffff800000000000
+#define LOGICAL_ADDR(x) ((x) + MEM_SHIFT)
+#define PHYSICAL_ADDR(x) ((x) - MEM_SHIFT)
+
 struct descriptor* descHeads[MAX_LEVEL];
 struct reservedTreeMetaInfo* metaInfo[MEMMAP_MAX_SIZE];
 
@@ -15,7 +19,7 @@ struct descriptor;
 struct reservedTreeMetaInfo {
     uint64_t size;
     struct descriptor* descriptors;
-    uint64_t startAddr;
+    uint64_t startAddr; // LOGICAL
 };
 
 struct descriptor {
