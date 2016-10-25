@@ -47,7 +47,6 @@ void main(void) {
     
     printf("Buddy test successfull\n");
     
-    
     struct slabAllocator* slab = initSlab(4, 10);
     uint32_t* b = slabAlloc(slab);
     
@@ -58,6 +57,6 @@ void main(void) {
     slabFree(slab, b);
     destroySlab(slab);
     
-    printf("Slab test succesfull\n");
+    printf("Slab test successfull\n");
 	while (1);
 }
