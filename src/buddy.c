@@ -1,6 +1,9 @@
 #include "buddy.h"
 #include "print.h"
 
+struct descriptor* descHeads[MAX_LEVEL];
+struct reservedTreeMetaInfo* metaInfo[MEMMAP_MAX_SIZE];
+
 uint32_t minPowerOfTwo(uint64_t x) {
     uint32_t res = 0;
     uint64_t pow = 1;

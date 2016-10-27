@@ -8,9 +8,6 @@
 
 #define MAX_LEVEL 32
 
-struct descriptor* descHeads[MAX_LEVEL];
-struct reservedTreeMetaInfo* metaInfo[MEMMAP_MAX_SIZE];
-
 struct descriptor;
 
 struct reservedTreeMetaInfo {
