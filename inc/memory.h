@@ -7,6 +7,7 @@
 #define KERNEL_CS	0x08
 #define KERNEL_DS	0x10
 
+#define GB (0x40000000)
 #define LOGICAL_ADDR(x) ((x) + MEM_SHIFT)
 #define PHYSICAL_ADDR(x) ((x) - MEM_SHIFT)
 

@@ -124,6 +124,11 @@ void buddyFree(void* addr) {
 void addSegmentMemory(struct memmapEntry* segment, uint64_t segmentIndex) {
     
     uint64_t firstAddr = segment->baseAddr;
+    
+    if (firstAddr > 4 * ((uint64_t) GB)) {
+        return;
+    }
+    
     if (firstAddr % PAGE_SIZE != 0) {
         firstAddr += PAGE_SIZE - (firstAddr % PAGE_SIZE);
     }
