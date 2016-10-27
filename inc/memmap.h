@@ -14,6 +14,7 @@ struct memmapEntry {
 
 extern uint32_t memmapLength;
 extern struct memmapEntry memmap[];
+uint64_t totalMemory;
 
 void addEntry(uint64_t addr, uint64_t len, uint32_t t);
 void readMemmap(void);

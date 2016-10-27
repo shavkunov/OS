@@ -62,6 +62,10 @@ void readMemmap(void) {
             addEntry(curLeft, kernelLeft - curLeft, curEntry.type);
         }        
     }
+    
+    for (uint32_t i = 0; i < memmapLength; i++)
+        if (totalMemory < memmap[i].baseAddr + memmap[i].length)
+            totalMemory = memmap[i].baseAddr + memmap[i].length;
             
     printf("End of read memory map\n");
 }

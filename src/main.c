@@ -7,6 +7,7 @@ static void qemu_gdb_hang(void)
 #endif
 }
 
+#include "paging.h"
 #include "buddy.h"
 #include "desc.h"
 #include "port.h"
@@ -20,9 +21,11 @@ static void qemu_gdb_hang(void)
 
 void init(void) {
     readMemmap();
+    printMemmap();
 	serial_setup();
 	initInterrupt();
     initTimer();
+    initPaging();
     initBuddy();
     enable_ints();
 }
@@ -31,7 +34,6 @@ void main(void) {
 	qemu_gdb_hang();
 	
 	init();
-    printMemmap();
     
     uint32_t** a = (uint32_t**)buddyAlloc(sizeof(uint32_t*) * 100);
     
