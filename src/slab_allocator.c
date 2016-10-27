@@ -45,7 +45,7 @@ struct slabAllocator* initSlab(uint64_t dataSize) {
     allocator->dataSize = dataSize;
     struct slabAllocator* unit = allocator;
     while (i * sizeof(allocator) < bytesNeeded) {
-        unit->head = (struct slabAllocator *)((char *)(allocator) + i * dataSize);
+        unit->head = (struct slabAllocator *)((uint32_t *)(allocator) + i * dataSize);
 		i++;
 		unit = unit->head;
 		unit->dataSize = dataSize;
