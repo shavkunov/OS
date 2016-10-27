@@ -49,14 +49,14 @@ void main(void) {
     
     printf("Buddy test successfull\n");
     
-    struct slabAllocator* slab = initSlab(4, 10);
-    uint32_t* b = slabAlloc(slab);
+    struct slabAllocator* slab = initSlab(4);
+    uint32_t* b = (uint32_t*) slabAlloc(&slab);
     
     for (uint32_t i = 0; i < 10; i++) {
         b[i] = i + 10;
     }
     
-    slabFree(slab, b);
+    slabFree(&slab, b);
     destroySlab(slab);
     
     printf("Slab test successfull\n");
