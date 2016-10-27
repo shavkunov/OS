@@ -5,15 +5,20 @@
 #include "stddef.h"
 #include "buddy.h"
 
-
-struct slabAllocator {
-    struct slabAllocator* head;
-    uint64_t dataSize;
+struct node {
+    struct node* next;
 };
 
-void slabFree(struct slabAllocator** allocator, void* addr);
+struct slabAllocator {
+    struct node* head;
+    struct slabAllocator *next;
+    struct slabAllocator *prev;
+    uint64_t allocatedNodes;
+};
+
+void slabFree(struct slabAllocator* allocator, void* addr);
 void destroySlab(struct slabAllocator* allocator);
-void* slabAlloc(struct slabAllocator** allocator);
-struct slabAllocator* initSlab(uint64_t dataSize);
+void* slabAlloc(struct slabAllocator* allocator);
+struct slabAllocator* initSlab(uint64_t dataSize, uint64_t amount);
 
 #endif
