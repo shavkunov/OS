@@ -16,6 +16,8 @@ typedef void (*function)(void*);
 void initThreads();
 void switcher();
 void switchThreads(thread* other);
+void lock();
+void unlock();
 thread* current();
 thread* createThread(function f, void* arg);
 

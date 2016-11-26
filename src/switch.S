@@ -8,10 +8,10 @@
 
 __origin:
     movq %r15, %rdi
-	movq %r14, %rsi
+    movq %r14, %rsi
 	
-	cld
-	callq execute
+    cld
+    callq execute
 
 switch_threads:
     pushq %rbp

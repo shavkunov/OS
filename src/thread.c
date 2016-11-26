@@ -34,6 +34,7 @@ void execute(function f, void* arg) {
 }
 
 thread* createThread(function f, void* arg) {
+    lock();
     thread* nthread = (thread*) buddyAlloc(sizeof(thread));
 
     nthread->stackStart = buddyAlloc(THREAD_STACK_MAXSIZE);
@@ -44,15 +45,24 @@ thread* createThread(function f, void* arg) {
 
     frame* frame = nthread->stackPointer;
     
-    frame->r15 = (uint64_t)f;
-    frame->r14 = (uint64_t)arg;
+    frame->r15 = (uint64_t) f;
+    frame->r14 = (uint64_t) arg;
     frame->r13 = 0;
     frame->r12 = 0;
     frame->rbx = 0;
     frame->rbp = 0;
     frame->addr = (uint64_t)(&__origin);
     
+    unlock();
     return nthread;
+}
+
+void lock() {
+    __asm__("cli"); // disable interruptions
+}
+
+void unlock() {
+    __asm__("sti"); // enable interruptions
 }
 
 void switcher() {
