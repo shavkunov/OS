@@ -18,6 +18,7 @@ static void qemu_gdb_hang(void)
 #include "stdint.h"
 #include "memmap.h"
 #include "slab_allocator.h"
+#include "thread.h"
 
 void init(void) {
     readMemmap();
@@ -28,6 +29,7 @@ void init(void) {
     initPaging();
     initBuddy();
     enable_ints();
+    initThreads();
 }
 
 void main(void) {
@@ -60,5 +62,6 @@ void main(void) {
     destroySlab(slab);
     
     printf("Slab test successfull\n");
+    
 	while (1);
 }
