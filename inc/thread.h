@@ -4,10 +4,10 @@
 #define THREAD_STACK_MAXSIZE 0x2000
 
 struct structThread {
-  void* stackStart;
-  void* stackPointer;
-  
-  struct structThread* next;
+    void* stackStart;
+    void* stackPointer;
+
+    struct structThread* next;
 };
 
 typedef struct structThread thread;
