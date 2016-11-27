@@ -25,12 +25,21 @@ void init(void) {
     printMemmap();
 	serial_setup();
 	initInterrupt();
-    initTimer();
+	initTimer();
     initPaging();
     initBuddy();
     enable_ints();
     initThreads();
 }
+
+void foo(void* arg) {
+    for (int i = 0; i < 1000; i++) {
+        lock();
+        printf("Hello from thread %s with i %d\n", (char*)arg, i);
+        unlock();
+    }
+}
+
 
 void main(void) {
 	qemu_gdb_hang();
@@ -60,8 +69,16 @@ void main(void) {
     
     slabFree(&slab, b);
     destroySlab(slab);
-    
     printf("Slab test successfull\n");
     
+    char arg1[] = "one";
+    char arg2[] = "two";
+    
+    thread* thread1 = threadCreate(foo, &arg1);
+    thread* thread2 = threadCreate(foo, &arg2);
+    join(thread1);
+    join(thread2);
+    
+    printf("Threads ended\n");   
 	while (1);
 }

@@ -1,11 +1,14 @@
 #include "slab_allocator.h"
 #include "print.h"
+#include "thread.h"
 
 void slabFree(struct slabAllocator** allocator, void* addr) {
+    lock();
     struct slabAllocator* newSlab = (struct slabAllocator *) addr;
 	newSlab->dataSize = (*allocator)->dataSize;
 	newSlab->head = *allocator;
 	(*allocator) = newSlab;
+	unlock();
 }
 
 void destroySlab(struct slabAllocator* allocator) {
@@ -13,6 +16,8 @@ void destroySlab(struct slabAllocator* allocator) {
 }
 
 void* slabAlloc(struct slabAllocator** allocator) {
+    lock();
+
     if ((*allocator)->head == NULL) {
         struct slabAllocator* newSlab = initSlab((*allocator)->dataSize);
         (*allocator)->head = newSlab;
@@ -20,6 +25,8 @@ void* slabAlloc(struct slabAllocator** allocator) {
 
     void* memory = (void*) (*allocator);
     *allocator = (*allocator)->head;
+    
+    unlock();
     return memory;
 }
 

@@ -10,8 +10,8 @@ void initTimer() {
     out8(COMMAND_PORT, mask);
     
     //set to min freq
-    out8(ZERO_CHANNEL, 0xff);
-    out8(ZERO_CHANNEL, 0xff);
+    out8(ZERO_CHANNEL, 0xffu);
+    out8(ZERO_CHANNEL, 0xffu);
     
     //unmask entry master
     setBitMaster(0, 0);

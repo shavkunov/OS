@@ -1,5 +1,6 @@
 #include "buddy.h"
 #include "print.h"
+#include "thread.h"
 
 struct descriptor* descHeads[MAX_LEVEL];
 struct reservedTreeMetaInfo* metaInfo[MEMMAP_MAX_SIZE];
@@ -46,7 +47,8 @@ struct descriptor* getDescriptor(void* searchAddr) {
     return NULL;
 }
 
-void* allocLevel(uint32_t level) { 
+void* allocLevel(uint32_t level) {
+    lock(); 
     for (uint32_t i = level; i < MAX_LEVEL; i++) {
         if (descHeads[i] == NULL)
             continue;
@@ -57,8 +59,12 @@ void* allocLevel(uint32_t level) {
 
         eraseHead(desc);
         desc->allocated = 1;
+        
+        unlock();
         return getStartAddr(desc);
     }
+    
+    unlock();
     return NULL;
 }
 
@@ -117,11 +123,13 @@ struct descriptor* split(struct descriptor* desc) {
 }
 
 void buddyFree(void* addr) {
+    lock();
     struct descriptor* desc = getDescriptor(addr);
 
     desc->allocated = 0;
     insertHead(desc);
     while ((desc = merge(desc)));
+    unlock();
 }
 
 void addSegmentMemory(struct memmapEntry* segment, uint64_t segmentIndex) {

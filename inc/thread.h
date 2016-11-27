@@ -1,24 +1,33 @@
 #ifndef __THREADS_H__
 #define __THREADS_H__
 
-#define THREAD_STACK_MAXSIZE 0x2000
+#include <stdint.h>
 
-struct structThread {
+#define THREAD_STACK_SIZE 0x2000
+
+#define STATE_RUN 0
+#define STATE_JOIN 1
+
+struct Thread {
     void* stackStart;
     void* stackPointer;
 
-    struct structThread* next;
+    uint32_t stateFlag;
+    struct Thread* prev;
+    struct Thread* next;
+    uint32_t cnt; // locks amount
 };
 
-typedef struct structThread thread;
+typedef struct Thread thread;
 typedef void (*function)(void*);
 
 void initThreads();
-void switcher();
-void switchThreads(thread* other);
+void callSwitcher();
+void switchThreads(thread* t);
 void lock();
 void unlock();
-thread* current();
-thread* createThread(function f, void* arg);
+void join(thread* t);
+thread* threadCreate(function f, void* arg);
 
 #endif
+

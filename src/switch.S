@@ -1,15 +1,15 @@
 .text
 .code64
 
-.extern thread_origin
+.extern execute
 
-.global __origin
+.global origin
 .global switch_threads
 
-__origin:
+origin:
     movq %r15, %rdi
     movq %r14, %rsi
-	
+
     cld
     callq execute
 
@@ -21,7 +21,7 @@ switch_threads:
     pushq %r14
     pushq %r15
 
-    movq %rsp, %rdi
+    movq %rsp, (%rdi)
     movq %rsi, %rsp
 
     popq %r15

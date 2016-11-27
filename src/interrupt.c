@@ -4,6 +4,7 @@
 #include "ints.h"
 #include "ioport.h"
 #include "print.h"
+#include "thread.h"
 
 static struct idtEntryStruct idt[100];
 extern uint64_t arrayHandlers[];
@@ -88,15 +89,14 @@ void endOfInterrupt(uint8_t port) {
 }
 
 void interruptHandler(uint64_t interruptIndex) { 
-    /*if (interruptIndex == 32) {
-	    printf("Timer tick. ");
-	}
-
-	printf("Interrupt is %d\n", interruptIndex);*/
-
     // Master End of Interrupt
-    if (32 <= interruptIndex && interruptIndex <= 39)
+    if (32 <= interruptIndex && interruptIndex <= 39) {
+        if (interruptIndex == 32) {
+           callSwitcher();
+        }
+    
         endOfInterrupt(MASTER_COMMAND_PORT);
+    }
 
     // Slave End Of Interrupt
     if (40 <= interruptIndex && interruptIndex <= 47) {
