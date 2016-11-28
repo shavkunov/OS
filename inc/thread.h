@@ -1,5 +1,5 @@
-#ifndef __THREADS_H__
-#define __THREADS_H__
+#ifndef __THREAD_H__
+#define __THREAD_H__
 
 #include <stdint.h>
 

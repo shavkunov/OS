@@ -2,6 +2,7 @@
 #include <buddy.h>
 #include <interrupt.h>
 #include <print.h>
+#include <ints.h>
 
 struct threadFrame  {
     uint64_t r15;
@@ -45,10 +46,7 @@ void switchThreads(thread* t) {
 }
 
 void lock() {
-    if (currentThread->cnt == 0) {
-        __asm__("cli"); // disable interruptions
-    }
-
+    disable_ints(); // disable interruptions
     currentThread->cnt++;
 }
 
@@ -56,13 +54,13 @@ void unlock() {
     currentThread->cnt--;
 
     if (currentThread->cnt == 0) {
-        __asm__("sti"); // enable interruptions
+        enable_ints(); // enable interruptions
     }
 }
 
 void execute(function f, void* arg) {
     endOfInterrupt(MASTER_COMMAND_PORT); 
-    __asm__("sti"); 
+    enable_ints();
 
     f(arg);
 
