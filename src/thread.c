@@ -100,7 +100,7 @@ thread* threadCreate(function f, void* arg) {
 void join(thread* t) {
     while (1) {
         lock();
-        if (t->stateFlag == STATE_JOIN) {
+        if (t->stateFlag != STATE_JOIN) {
             unlock();
             continue;
         }
