@@ -91,11 +91,11 @@ void endOfInterrupt(uint8_t port) {
 void interruptHandler(uint64_t interruptIndex) { 
     // Master End of Interrupt
     if (32 <= interruptIndex && interruptIndex <= 39) {
+        endOfInterrupt(MASTER_COMMAND_PORT);
+    
         if (interruptIndex == 32) {
            callSwitcher();
         }
-    
-        endOfInterrupt(MASTER_COMMAND_PORT);
     }
 
     // Slave End Of Interrupt

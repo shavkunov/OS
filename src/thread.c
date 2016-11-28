@@ -1,4 +1,5 @@
 #include <thread.h>
+#include <buddy.h>
 #include <slab_allocator.h>
 #include <interrupt.h>
 #include <print.h>
