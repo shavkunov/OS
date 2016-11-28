@@ -1,5 +1,4 @@
 #include <thread.h>
-#include <buddy.h>
 #include <slab_allocator.h>
 #include <interrupt.h>
 #include <print.h>
@@ -18,10 +17,14 @@ struct threadFrame  {
 extern void origin(void);
 extern void switch_threads(void** old_sp, void* new_sp);
 
+struct slabAllocator* threadSlab;
+struct slabAllocator*  stackSlab;
 thread mainThread;
 thread* currentThread;
 
 void initThreads() {
+    threadSlab = initSlab(sizeof(thread));
+    stackSlab = initSlab(sizeof(THREAD_STACK_SIZE));
     currentThread = &mainThread;
 
     currentThread->stackStart = NULL;
@@ -72,9 +75,9 @@ void execute(function f, void* arg) {
 
 thread* threadCreate(function f, void* arg) {
     lock();
-    thread* nthread = (thread*) buddyAlloc(sizeof(thread));
+    thread* nthread = (thread*) slabAlloc(&threadSlab);
 
-    nthread->stackStart = buddyAlloc(THREAD_STACK_SIZE);
+    nthread->stackStart = slabAlloc(&stackSlab);
     nthread->stackPointer = (void*) ((uint64_t) nthread->stackStart + THREAD_STACK_SIZE);
     nthread->stackPointer = (void*) ((uint64_t) nthread->stackPointer - sizeof(struct threadFrame));
     nthread->stateFlag = STATE_RUN;
@@ -110,6 +113,7 @@ void join(thread* t) {
 
     t->prev->next = t->next;
     t->next->prev = t->prev;
-    buddyFree(t);
+    slabFree(&stackSlab, t->stackStart);
+    slabFree(&threadSlab, t);
     unlock();
 }
