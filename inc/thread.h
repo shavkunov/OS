@@ -15,7 +15,6 @@ struct Thread {
     uint32_t stateFlag;
     struct Thread* prev;
     struct Thread* next;
-    uint32_t cnt; // locks amount
 };
 
 typedef struct Thread thread;

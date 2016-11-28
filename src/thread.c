@@ -1,5 +1,5 @@
 #include <thread.h>
-#include <buddy.h>
+#include <slab_allocator.h>
 #include <interrupt.h>
 #include <print.h>
 #include <ints.h>
@@ -28,7 +28,6 @@ void initThreads() {
     currentThread->stateFlag = STATE_RUN;
     currentThread->prev = currentThread;
     currentThread->next = currentThread;
-    currentThread->cnt = 0;
 }
 
 void callSwitcher() {
@@ -45,23 +44,22 @@ void switchThreads(thread* t) {
     switch_threads(&prev->stackPointer, t->stackPointer);
 }
 
+uint32_t cnt = 0;
+
 void lock() {
     disable_ints(); // disable interruptions
-    currentThread->cnt++;
+    cnt++;
 }
 
 void unlock() {
-    currentThread->cnt--;
+    cnt--;
 
-    if (currentThread->cnt == 0) {
+    if (cnt == 0) {
         enable_ints(); // enable interruptions
     }
 }
 
 void execute(function f, void* arg) {
-    endOfInterrupt(MASTER_COMMAND_PORT); 
-    enable_ints();
-
     f(arg);
 
     lock();
@@ -99,18 +97,14 @@ thread* threadCreate(function f, void* arg) {
 }
 
 void join(thread* t) {
-    lock();
-
-    while (t->stateFlag != STATE_JOIN) {
-        unlock();
-        
-        if (t->stateFlag == STATE_JOIN) {
-            lock();
-            break;
-        }
-
+    while (1) {
         lock();
-        continue;
+        if (t->stateFlag == STATE_JOIN) {
+            unlock();
+            continue;
+        }
+        
+        break;
     }
 
     t->prev->next = t->next;
