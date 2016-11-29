@@ -7,11 +7,8 @@
 .global switch_threads
 
 origin:
-
     movq %r15, %rdi
     movq %r14, %rsi
-    pushq 0
-    popfq
     
     cld
     callq execute
@@ -26,7 +23,7 @@ switch_threads:
 
     movq %rsp, (%rdi)
     movq %rsi, %rsp
-
+    
     popq %r15
     popq %r14
     popq %r13
