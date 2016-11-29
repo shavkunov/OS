@@ -64,6 +64,8 @@ void unlock() {
 }
 
 void execute(function f, void* arg) {
+    enable_ints();
+
     f(arg);
 
     lock();
