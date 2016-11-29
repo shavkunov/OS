@@ -10,7 +10,8 @@ origin:
 
     movq %r15, %rdi
     movq %r14, %rsi
-
+    pushq 0
+    popfq
     
     cld
     callq execute
