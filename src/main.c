@@ -35,7 +35,7 @@ void init(void) {
 void foo(void* arg) {
     for (int i = 0; i < 1000; i++) {
         lock();
-        printf("Hello from thread %s with i %d\n", (char*)arg, i);
+        printf("Hello from thread %s with i = %d\n", (char*)arg, i);
         unlock();
     }
 }
@@ -76,6 +76,7 @@ void main(void) {
     
     thread* thread1 = threadCreate(foo, &arg1);
     thread* thread2 = threadCreate(foo, &arg2);
+    printf("begin join\n");
     join(thread1);
     join(thread2);
     

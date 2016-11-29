@@ -24,7 +24,7 @@ thread* currentThread;
 
 void initThreads() {
     threadSlab = initSlab(sizeof(thread));
-    stackSlab = initSlab(sizeof(THREAD_STACK_SIZE));
+    stackSlab = initSlab(THREAD_STACK_SIZE);
     currentThread = &mainThread;
 
     currentThread->stackStart = NULL;
@@ -94,7 +94,7 @@ thread* threadCreate(function f, void* arg) {
     frame->r12 = 0;
     frame->rbx = 0;
     frame->rbp = 0;
-    frame->addr = (uint64_t) &origin;
+    frame->addr = (uint64_t) (&origin);
 
     unlock(); 
     return nthread;
