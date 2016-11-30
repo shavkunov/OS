@@ -35,6 +35,7 @@ void initThreads() {
 }
 
 void callSwitcher() {
+    enable_ints();
     switchThreads(currentThread->next);
 }
 
